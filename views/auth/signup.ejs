@@ -7,25 +7,39 @@
     <title>Document</title>
     <link rel="stylesheet" href="<%= '/static/auth/signup.css' %>">
     <style>
-        .formErr{
-            background-color: maroon;
-            color : white;
-            padding : 20px;
-        }
+        
     </style>
 </head>
 <body>
-    <h1>Welcome to Internship Fair</h1>
-    <h2>Sign Up Here</h2>
-
+    
     <form method="POST">
         
+        <h1>Welcome to Internship Fair</h1>
+        <h2>Sign Up as an Intern Here</h2>
 
         <% if (locals.errs) {%>
             <% for (let err of errs) {%>
                 <div class="formErr"><%= err.msg %></div>
             <% } %>
         <% } %>
+
+        
+        <p> 
+            <label for="first_name">
+                First Name:
+                <input name="first_name" required minlength="2">
+            </label>
+        </p>
+
+        <p> 
+            <label for="last_name">
+                Last Name:
+                <input name="last_name" required minlength="2">
+            </label>
+        </p>
+
+
+
         <p>
             <label for="email">
                 Email : <input type="email" name="email" required minlength="3" <% if (locals.formdata){%>value=<%= locals.formdata.email %><%}%>>
@@ -40,10 +54,46 @@
 
         <p>
             <label for="retype_password">
-                Password : <input type="password" name="retype_password" required minlength="4">
+                Retype Password : <input type="password" name="retype_password" required minlength="4">
             </label>
         </p>
 
+
+        <!-- Added new fields. Please Validate -->
+        <!-- <p> 
+            <label for="country">
+                Country:
+                <input name="country" required minlength="5">  
+            </label>
+        </p> -->
+
+        <p> 
+            <label for="city">
+                City:
+                <input name="city" required minlength="5">  
+            </label>
+        </p>
+
+        <p> 
+            <label for="institution">
+                Institution:
+                <input name="institution" required minlength="5">  
+            </label>
+        </p>
+
+        <p> 
+            <label for="course">
+                Course of Study:
+                <input name="course" required minlength="5">  
+            </label>
+        </p>
+
+        <p> 
+            <label for="cgpa">
+                CGPA`:
+                <input name="cgpa" type="number" min="0.2" max="5.0" step="0.01"  required minlength="5">  
+            </label>
+        </p>
         <button>Sign Up</button>
     </form>
 </body>
