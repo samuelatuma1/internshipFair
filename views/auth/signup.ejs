@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="<%= '/static/auth/signup.css' %>">
+    <style>
+        .formErr{
+            background-color: maroon;
+            color : white;
+            padding : 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Internship Fair</h1>
+    <h2>Sign Up Here</h2>
+
+    <form method="POST">
+        
+
+        <% if (locals.errs) {%>
+            <% for (let err of errs) {%>
+                <div class="formErr"><%= err.msg %></div>
+            <% } %>
+        <% } %>
+        <p>
+            <label for="email">
+                Email : <input type="email" name="email" required minlength="3" <% if (locals.formdata){%>value=<%= locals.formdata.email %><%}%>>
+            </label>
+        </p>
+
+        <p>
+            <label for="password">
+                Password : <input type="password" name="password" required minlength="4" <% if (locals.formdata){%>value=<%= locals.formdata.password %><%}%>>
+            </label>
+        </p>
+
+        <p>
+            <label for="retype_password">
+                Password : <input type="password" name="retype_password" required minlength="4">
+            </label>
+        </p>
+
+        <button>Sign Up</button>
+    </form>
+</body>
+</html>

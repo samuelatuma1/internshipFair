@@ -12,15 +12,16 @@ const cookieParser = require("cookie-parser")
 
 
 // View Engine Set Up
-app.set('view-engine', 'ejs')
+app.set('view engine', 'ejs')
 
 // Set up static directory
-app.use("/static", express.static(__dirname + '/static'))
+// app.use("/static", express.static('/static'))
+app.use('/static', express.static('public'))
 
 // session and cookie setup
 app.use(session({
     secret : process.env.secret,
-    resave : false,
+    resave : true,
     saveUninitialized : false,
     cookie : {
        // secure : true,
@@ -37,5 +38,14 @@ app.use(cookieParser({
 // Handling post data
 app.use(express.urlencoded( { extended : true}))
 app.use(express.json())
+
+// Authentication
+const {auth} = require("./controller/auth")
+app.use("/auth", auth)
+
+
+const port = process.env.PORT || 9000
+app.listen(port , () => console.log(`Listening on PORT : ${port}`))
+
 
 
