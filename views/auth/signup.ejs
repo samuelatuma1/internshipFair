@@ -26,15 +26,15 @@
         
         <p> 
             <label for="first_name">
-                First Name:
-                <input name="first_name" required minlength="2">
+                First Name *:
+                <input name="first_name" required minlength="2" <% if (locals.formdata){%>value=<%= locals.formdata.first_name %><%}%>>
             </label>
         </p>
 
         <p> 
             <label for="last_name">
-                Last Name:
-                <input name="last_name" required minlength="2">
+                Last Name *:
+                <input name="last_name" required minlength="2" <% if (locals.formdata){%>value=<%= locals.formdata.last_name %><%}%>>
             </label>
         </p>
 
@@ -42,19 +42,19 @@
 
         <p>
             <label for="email">
-                Email : <input type="email" name="email" required minlength="3" <% if (locals.formdata){%>value=<%= locals.formdata.email %><%}%>>
+                Email *: <input type="email" name="email" required minlength="3" <% if (locals.formdata){%>value=<%= locals.formdata.email %><%}%>>
             </label>
         </p>
 
         <p>
             <label for="password">
-                Password : <input type="password" name="password" required minlength="4" <% if (locals.formdata){%>value=<%= locals.formdata.password %><%}%>>
+                Password *: <input type="password" name="password" required minlength="4" <% if (locals.formdata){%>value=<%= locals.formdata.password %><%}%>>
             </label>
         </p>
 
         <p>
             <label for="retype_password">
-                Retype Password : <input type="password" name="retype_password" required minlength="4">
+                Retype Password *: <input type="password" name="retype_password" required minlength="4">
             </label>
         </p>
 
@@ -69,29 +69,29 @@
 
         <p> 
             <label for="city">
-                City:
-                <input name="city" required minlength="5">  
+                City *:
+                <input name="city" required minlength="2 <% if (locals.formdata){%>value=<%= locals.formdata.city %><%}%>">  
             </label>
         </p>
 
         <p> 
             <label for="institution">
-                Institution:
-                <input name="institution" required minlength="5">  
+                Institution *:
+                <input name="institution" required minlength="2" <% if (locals.formdata){%>value=<%= locals.formdata.institution %><%}%>>  
             </label>
         </p>
 
         <p> 
             <label for="course">
-                Course of Study:
-                <input name="course" required minlength="5">  
+                Course of Study *:
+                <input name="course" required minlength="2" <% if (locals.formdata){%>value=<%= locals.formdata.course %><%}%>>  
             </label>
         </p>
 
         <p> 
             <label for="cgpa">
-                CGPA`:
-                <input name="cgpa" type="number" min="0.2" max="5.0" step="0.01"  required minlength="5">  
+                CGPA:
+                <input name="cgpa" type="number" min="0.2" max="5.0" step="0.01" <% if (locals.formdata){%>value=<%= locals.formdata.cgpa %><%}%>>  
             </label>
         </p>
         <button>Sign Up</button>
