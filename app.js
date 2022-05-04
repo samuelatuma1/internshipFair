@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 const dotenv = require("dotenv").config()
 
 // Connect to local Database
-mongoose.connect("mongodb://127.0.0.1:27017/internshipFairDB", () => console.log(`Connected Successfully to Server at ${new Date()}`))
+mongoose.connect("mongodb://127.0.0.1:27017/internshipFairDB", {}, () => console.log(`Connected Successfully to Server at ${new Date()}`))
 
 // set up
 const app = express()

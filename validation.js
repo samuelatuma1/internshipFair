@@ -14,7 +14,7 @@ const filled_with_blanks = (val, {req}, errMsg) => {
 
 // 
 const validateSignUpDetails = [
-    check("first_name").isLength({in : 2}).custom((val, {req}) => {
+    check("first_name").isLength({min : 2}).custom((val, {req}) => {
          // Ensure first is not Just made up of ' '(space)
          let startChar = ' '
          for(let char of val){
@@ -25,7 +25,7 @@ const validateSignUpDetails = [
          throw new Error("Please enter a valid First Name")
 
     }),
-    check("last_name").isLength({in : 2}).custom((val, {req}) => {
+    check("last_name").isLength({min : 2}).custom((val, {req}) => {
         // Ensure first is not Just made up of ' '(space)
         let startChar = ' '
         for(let char of val){

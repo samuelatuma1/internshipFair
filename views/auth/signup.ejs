@@ -17,6 +17,17 @@
         <h1>Welcome to Internship Fair</h1>
         <h2>Sign Up as an Intern Here</h2>
 
+        <% if (locals.success){ %>
+            <div class="formSuccess">
+                <%= `You have successfully signed up ${success.first_name}. ` %>
+                <a href="./Internsignin">Sign in Here</a>
+            </div>
+        <% } %>
+
+        <% if (locals.dberrs) {%>
+            <div class="formErr"><%= dberrs %></div>
+        <%} %>
+
         <% if (locals.errs) {%>
             <% for (let err of errs) {%>
                 <div class="formErr"><%= err.msg %></div>
@@ -70,7 +81,7 @@
         <p> 
             <label for="city">
                 City *:
-                <input name="city" required minlength="2 <% if (locals.formdata){%>value=<%= locals.formdata.city %><%}%>">  
+                <input name="city" required minlength="2" <% if (locals.formdata){%>value=<%= locals.formdata.city %><%}%>>  
             </label>
         </p>
 
@@ -91,10 +102,12 @@
         <p> 
             <label for="cgpa">
                 CGPA:
-                <input name="cgpa" type="number" min="0.2" max="5.0" step="0.01" <% if (locals.formdata){%>value=<%= locals.formdata.cgpa %><%}%>>  
+                <input name="cgpa" type="number" min="0.0" max="5.0" step="0.01" <% if (locals.formdata){%>value=<%= locals.formdata.cgpa %><%}%>>  
             </label>
         </p>
         <button>Sign Up</button>
+        <p>Already have an account? <a href='./Internsignin'>sign in here</a></p>
     </form>
+
 </body>
 </html>
