@@ -28,8 +28,7 @@ app.use(session({
        maxAge : 200000000
     }
 }))
-app.use(cookieParser({
-    secret : process.env.secret,
+app.use(cookieParser( process.env.secret,{
     options : {
         maxAge : 200000000
     }
@@ -42,6 +41,7 @@ app.use(express.json())
 // Authentication
 const {auth} = require("./controller/auth")
 app.use("/auth", auth)
+
 
 
 const port = process.env.PORT || 9000

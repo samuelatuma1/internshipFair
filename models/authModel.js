@@ -1,4 +1,4 @@
-const {Intern} = require('./modelSchemas.js')
+const {Intern,  InternProfile} = require('./modelSchemas.js')
 const mongoose = require("mongoose")
 
 const config = require("dotenv").config()
@@ -28,10 +28,24 @@ async function addInternData (internData) {
 
         // Save Intern to DataBase
         const newIntern = await new Intern(cleanedInternData)
+
+        
+        // Create Intern Profile
+        const internProfile = await new InternProfile({ InternUserId : newIntern._id})
+        const saveProfile = await internProfile.save()
+        console.log(saveProfile)
+        
+        // Add Profile_id to InternData
+        newIntern.profileId = saveProfile._id
+
+        // saveIntern
         const saveIntern = await newIntern.save()
-        return  new Promise((resolve, reject) => {
-            console.log(saveIntern)
+
+        return  new Promise(async (resolve, reject) => {
+            // console.log(newIntern)
+        
             resolve(saveIntern.str())
+
         })
     } 
     catch(err){
@@ -42,7 +56,19 @@ async function addInternData (internData) {
 }
 
 
+async function signInUser(userForm){
+    // Hash Password
+    const hashedPassword = crypto.Hmac('sha256', process.env.secret).update(userForm.password).digest("hex")
+
+    // Look up matching username and hashedpassword in database
+    const valid = await Intern.where({email : userForm.email}).where({ password : hashedPassword})
+    
+    return new Promise((resolve, reject) => {
+        return valid.length > 0 ? resolve(valid[0]) : reject('Invalid user Name')
+    })
+}
 
 
 
-module.exports  = { addInternData }
+
+module.exports  = { addInternData, signInUser }

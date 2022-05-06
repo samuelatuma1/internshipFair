@@ -54,25 +54,63 @@ const InternSchema = new mongoose.Schema({
     chats : {
         type : Object,
         default : {}
+    },
+    updatedAt : {
+        type : Date,
+        default : () => Date.now()
+    },
+    profileId : {
+        type : mongoose.SchemaTypes.ObjectId,
+        ref : "InternProfile"
     }
 })
 
 InternSchema.methods.str = function (){
     return `${this.first_name} ${this.last_name} <${this.email}>`
 }
-
-
-/**
- * 
- * @param {Object} internData : -> An object containing intern data.
- * sample internData -> {
-    first_name: 'Samuel', last_name: 'Atuma', email: 'sam@gmail.com', password: '12345',
-    retype_password: '12345', city: 'PH', institution: 'University of Port Harcourt',
-    course: 'Petroleum Engineering', cgpa: '4.31'
-}
-* @returns {Promise} 
- */
-
+InternSchema.pre("save", function(next){
+    this.updatedAt = Date.now()
+    next()
+})
 const Intern = mongoose.model('Intern', InternSchema)
-module.exports  = { Intern }
+
+
+
+var InternProfileSchema = new mongoose.Schema({
+    InternUserId : {
+        type : mongoose.SchemaTypes.ObjectId,
+        ref : 'Intern',
+        required : true
+    },
+    InternStatus : {
+        type : String,
+    },
+    InternProfileImgUrl : {
+        type : String
+    },
+    InternResumeUrl : {
+        type : String
+    },
+    updatedAt : {
+        type : Date
+    }
+})
+
+
+InternProfileSchema.methods.getIntern = async function(){
+    const internId = this.InternUserId
+    try{
+        const intern = await Intern.findOne({_id : internId})
+        return intern
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+InternProfileSchema.pre("save", function(next) {
+    this.updatedAt = Date.now()
+    next()
+})
+const InternProfile = mongoose.model("InternProfile", InternProfileSchema)
+module.exports  = { Intern,  InternProfile }
 
