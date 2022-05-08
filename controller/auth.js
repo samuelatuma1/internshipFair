@@ -3,7 +3,7 @@ const express = require("express")
 const auth = express.Router()
 const {check, validationResult} = require('express-validator')
 
-const {addInternData, signInUser} = require("../models/authModel")
+const {addInternData, signInUser, getSignedInData} = require("../models/authModel")
 const {validateSignUpDetails} = require('../validation')
 
 
@@ -17,9 +17,8 @@ auth.route('/')
 
 
 
-
-// Sign up for Interns. !! Not employers
-auth.route('/Internsignup')
+    // Sign up for Interns. !! Not employers
+    auth.route('/Internsignup')
     .get((req, res) => {
         res.type("html")
         res.status(200).render('auth/signup')
@@ -61,9 +60,9 @@ auth.route('/InternSignIn')
             let validUser = await signInUser(formData)
 
             // Add signed In user to session and user id to Cookie
-            req.session.signedIn = validUser
+            req.session.signedIn = validUser._id
             res.cookie("signedIn", validUser._id)
-            console.log(req.session.signedIn, req.cookies.signedIn)
+            console.log(req.cookies.signedIn)
 
             // redirect to profile Page
             return res.redirect(302, './profile_page')
@@ -72,17 +71,29 @@ auth.route('/InternSignIn')
         } catch(invalidUser){
             return res.status(200).render('./auth/signin', { errMsg : "Username or Password Incorrect"})
         }
-
+        
     })
+    
+    
 
 
 auth.route('/profile_page')
-    .get((req, res) => {
+    .get(async (req, res) => {
         // Redirect to sign in page if no user is signed in
+        
         if(!req.cookies.signedIn){
+            
             return res.redirect(307, './InternSignIn')
         }
-        return res.send("You are in the get method of the profile page")
+        
+        try{
+        const signedInIntern = await getSignedInData(req)
+        console.log(signedInIntern )
+        return res.status(200).render('./auth/internProfile', {signedInIntern})
+        } catch (err){
+            // Handle with a 404
+            return res.redirect(307, './InternSignIn')
+        }
     })
     .post((req, res) => {
         return res.send("You are in the post method of the profile page")

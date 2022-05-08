@@ -25,12 +25,12 @@ app.use(session({
     saveUninitialized : false,
     cookie : {
        // secure : true,
-       maxAge : 200000000
+       maxAge : 20000000
     }
 }))
 app.use(cookieParser( process.env.secret,{
     options : {
-        maxAge : 200000000
+        maxAge : 20000000
     }
 }))
 

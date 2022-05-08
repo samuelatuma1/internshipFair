@@ -4,7 +4,6 @@ const mongoose = require("mongoose")
 const config = require("dotenv").config()
 const crypto = require("crypto")
 /**
- * 
  * @param {Object} internData : -> An object containing intern data.
  * sample internData -> {
     first_name: 'Samuel', last_name: 'Atuma', email: 'sam@gmail.com', password: '12345',
@@ -13,8 +12,6 @@ const crypto = require("crypto")
 }
 * @returns {Promise} Promise Object
  */
-
-
 async function addInternData (internData) {
     try{
         // Hash Password first
@@ -55,7 +52,10 @@ async function addInternData (internData) {
     }
 }
 
-
+/**
+ * @param {Object} userForm :-> req.body object expected properties : email, password
+ * @returns {Promise} resolves with 
+ */
 async function signInUser(userForm){
     // Hash Password
     const hashedPassword = crypto.Hmac('sha256', process.env.secret).update(userForm.password).digest("hex")
@@ -68,7 +68,27 @@ async function signInUser(userForm){
     })
 }
 
+/**
+ * @param {Object} req :-> The request object
+ * @returns {Promise} :-> resolves with the user profile populated signedIn internData Object , rejects with String('No user found')
+ */
+ async function getSignedInData (req){
+    try{
+        const userId = req.session.signedIn  || req.cookies.signedIn
+        // intern Data
+        const internData = await Intern.where({ _id : userId })
+                                .populate('profileId')
+        if (internData.length > 0){
+
+            return internData[0]
+        }
+        return 'No user found'
+    } catch (e){
+        return 'No user Found'
+    }
+}
 
 
 
-module.exports  = { addInternData, signInUser }
+
+module.exports  = { addInternData, signInUser, getSignedInData }

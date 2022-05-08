@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="<%= '/static/auth/signup.css' %>">
+    <style>
+        .summary{
+            display : flex;
+            flex-wrap : wrap;
+            justify-content: space-between;
+            padding : 10px;
+        }
+        .profileImg img{
+            display : block;
+            max-width : 100%;
+            border-radius : 50%;
+            object-fit: cover;
+            width : 200px;
+            height : 200px;
+            margin : auto;
+        }
+        .profileImg{
+            width : 100%;
+        }
+        .summary main{
+            width : 100%;
+        }
+        /* .summary main header{
+            display : flex;
+            justify-content: space-between;
+        } */
+        .summary main button {
+            background-color: red;
+            color : rgb(255, 246, 247);
+            border : 0px;
+            box-shadow: 0px 0px 2px 0px red;
+            padding : 10px;
+            cursor : pointer;
+        }
+        @media screen and (min-width : 768px){
+            .profileImg{
+                width : 30%;
+            }
+            
+            .summary main {
+                width : 65%;
+            }
+        }
+        button.modify{
+            display : block;
+            margin-right : 0px;
+            float : right;
+            clear: both;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div>
+        <% if (locals.signedInIntern) { %> 
+            <%= signedInIntern %>
+        <%} %>
+    </div>
+    <section aria-label="InternSummary" class="summary">
+
+        <div class="profileImg" aria-label="Profile Image">
+            <img src="/static/auth/runopics.jpg">
+        </div>
+
+        <main aria-details="user profile details">
+            <header data-edit="Intern">
+                <button class="modify">Modify</button>
+                <span class="modifiable" data-edit="Intern"> <% if (locals.signedInIntern) { %> 
+                            <%= locals.signedInIntern.first_name %>
+                        <% } %>
+                </span>
+                <span class="modifiable" data-edit="Intern"><%= locals.signedInIntern.last_name %></span>
+
+                <p class="nonmodifiable"><%= locals.signedInIntern.email %></p>
+
+                <p>
+                    Currently studying at 
+                    <span class="modifiable"> <%= locals.signedInIntern.institution %></span> in 
+                    <span class="modifiable"><%= locals.signedInIntern.city %></span>
+                </p>
+
+                <script>
+                    // Modifies Model of parent Element with b=modified data
+                    const modifyBtns = document.querySelectorAll('.modify')
+
+                    modifyBtns.forEach(btn => btn.onclick = allowModify)
+
+                    function convertToModifiable(modifiable){
+                        const textarea = document.createElement("textarea")
+                        textarea.classList.add("modifyTextAra")
+                    }
+                    function allowModify(e){
+                        // get all modifiable in btn's parent
+                        let parent = e.target.parentElement
+                        let modifiables = parent.querySelectorAll('.modifiable')
+
+
+                        modifiables.forEach(modifiable => {
+                            convertToModifiable(modifiable)
+                        })
+                    }
+                </script>
+            </header>
+
+            
+
+        </main>
+    </section>
+</body>
+</html>
+
+<!-- <button>Edit Profile</button>
+                
+                <div class="try">
+                    <style>
+                        .hide{
+                            display : none;
+                        }
+                        .save{
+                            background-color: teal;
+                        }
+                    </style>
+                    <p>Hello You</p>
+                    <p>How are you</p>
+                    <button id="mod">Modify</button>
+                    <button class="save hide">Save</button>
+                    <script>
+                        let modifyBtn =  document.querySelector("#mod")
+                        modifyBtn.onclick = (e) => {
+                            
+                            const elems = e.target.parentElement.querySelectorAll('p')
+                            elems.forEach(p => {
+                            let textArea = document.createElement('textarea')
+                            textArea.classList.add('modify')
+                            textArea.value = p.innerText
+                            p.parentElement.insertBefore(textArea, p)
+
+                            // Hide all Ps
+                            p.classList.add('hide')
+
+                        })
+                        e.target.classList.add('hide')
+                        
+                        let saveBtn = document.querySelector(".save")
+                        saveBtn.classList.remove('hide')
+                        }
+
+                        let saveBtn = document.querySelector(".save")
+                        saveBtn.onclick = (e) => {
+                            const elems = e.target.parentElement.querySelectorAll('textarea')
+                            elems.forEach(tarea => {
+                                let nextP = tarea.nextElementSibling
+                                nextP.innerText = tarea.value
+                                nextP.classList.remove('hide')
+                                tarea.remove()
+                            })
+                            e.target.classList.add('hide')
+                            let modifyBtn =  document.querySelector("#mod")
+                            modifyBtn .classList.remove('hide')
+
+
+                        }
+                    </script> -->
