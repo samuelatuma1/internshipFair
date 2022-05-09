@@ -76,7 +76,7 @@ const Intern = mongoose.model('Intern', InternSchema)
 
 
 
-var InternProfileSchema = new mongoose.Schema({
+const InternProfileSchema = new mongoose.Schema({
     InternUserId : {
         type : mongoose.SchemaTypes.ObjectId,
         ref : 'Intern',

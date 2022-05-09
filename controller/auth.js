@@ -75,6 +75,7 @@ auth.route('/InternSignIn')
     })
     
     
+    
 
 
 auth.route('/profile_page')
@@ -85,10 +86,9 @@ auth.route('/profile_page')
             
             return res.redirect(307, './InternSignIn')
         }
-        
         try{
         const signedInIntern = await getSignedInData(req)
-        console.log(signedInIntern )
+        // console.log(signedInIntern )
         return res.status(200).render('./auth/internProfile', {signedInIntern})
         } catch (err){
             // Handle with a 404
@@ -97,6 +97,11 @@ auth.route('/profile_page')
     })
     .post((req, res) => {
         return res.send("You are in the post method of the profile page")
+    })
+    .put((req, res) => {
+        console.log("Put request Made")
+        console.log(req.body)
+        
     })
 
 

@@ -55,7 +55,21 @@
             float : right;
             clear: both;
         }
-
+        .hideModifiable{
+            display : none;
+        }
+        .modifyinput{
+            padding : 10px;
+            border : 1px solid rgb(218, 215, 215);
+            border-radius: 20px;
+            display : block;
+        }
+        .hideMakeChanges{
+            display : none
+        }
+        .showChangeBtns{
+            display : block
+        }
     </style>
 
 </head>
@@ -74,40 +88,127 @@
         <main aria-details="user profile details">
             <header data-edit="Intern">
                 <button class="modify">Modify</button>
-                <span class="modifiable" data-edit="Intern"> <% if (locals.signedInIntern) { %> 
-                            <%= locals.signedInIntern.first_name %>
-                        <% } %>
+               <strong> First Name  </strong><span class="modifiable" data-edit="Intern" data-name="first_name"><% if (locals.signedInIntern) { %><%= locals.signedInIntern.first_name %><% } %>
                 </span>
-                <span class="modifiable" data-edit="Intern"><%= locals.signedInIntern.last_name %></span>
+                <strong>Last Name : </strong><span class="modifiable" data-name="last_name" ><%= locals.signedInIntern.last_name %></span>
 
-                <p class="nonmodifiable"><%= locals.signedInIntern.email %></p>
+                <br><strong>Email  </strong><span class="nonmodifiable"><%= locals.signedInIntern.email %></span>
 
                 <p>
-                    Currently studying at 
-                    <span class="modifiable"> <%= locals.signedInIntern.institution %></span> in 
-                    <span class="modifiable"><%= locals.signedInIntern.city %></span>
+                    <strong>Currently studying at </strong>
+                    <span class="modifiable" data-name="institution"> <%= locals.signedInIntern.institution %></span>
+                    <strong>City </strong><span class="modifiable" data-name="city"><%= locals.signedInIntern.city %></span>
                 </p>
-
+                
+                <!-- Please Include this div in places where you will want to make Changes to userData / profile-->
+                <div class="hideMakeChanges ChangeBtns">
+                    <button class="cancelModified">Cancel</button>
+                    <button class="saveModified">Save Changes</button>
+                </div>
                 <script>
-                    // Modifies Model of parent Element with b=modified data
+                    // Modifies Model of parent Element with modified data
                     const modifyBtns = document.querySelectorAll('.modify')
 
                     modifyBtns.forEach(btn => btn.onclick = allowModify)
 
                     function convertToModifiable(modifiable){
-                        const textarea = document.createElement("textarea")
-                        textarea.classList.add("modifyTextAra")
+                        const input = document.createElement("input")
+                        input.classList.add("modifyinput")
+
+                        // modifiables should have attributes data-name that'll serve as keys for the inputs
+                        input.name = modifiable.getAttribute("data-name")
+
+                        input.value = modifiable.innerText
+                        modifiable.parentElement.insertBefore(input, modifiable)
+                       
+                        // Hide Original 
+                        modifiable.classList.add('hideModifiable')
                     }
                     function allowModify(e){
                         // get all modifiable in btn's parent
                         let parent = e.target.parentElement
+                        // disable clicking again
+                        e.target.disabled = true
                         let modifiables = parent.querySelectorAll('.modifiable')
-
 
                         modifiables.forEach(modifiable => {
                             convertToModifiable(modifiable)
                         })
+                        // show save amd cancel buttons
+                        const makeChanges = parent.querySelector(".ChangeBtns")
+                        makeChanges.classList.remove("hideMakeChanges")
                     }
+
+                    // Cancel Button to cancel changes
+                    const cancelModifiedBtns = document.querySelectorAll(".cancelModified")
+                    /** 
+                     * @params {Object} e : -> Event Emitter object
+                     * Cancels changes made to a particular container
+                    */
+                    const cancelChanges = e => {
+                        // Get parent of parent
+                        const containerToCancelChanges = e.target.parentElement.parentElement
+                        const inputs = containerToCancelChanges.querySelectorAll(".modifyinput")
+
+                        // show all hidden modifiable
+                        let modifiables =containerToCancelChanges.querySelectorAll('.modifiable')
+                        modifiables.forEach(modifiable => modifiable.classList.remove("hideModifiable"))
+                        // Remove inputs
+                        inputs.forEach(input => input.remove())
+
+                        // make modify btn clickable again
+                        const modifyBtn = containerToCancelChanges.querySelector('.modify')
+                        modifyBtn.disabled = false
+ 
+                        // hide save and cancel buttons
+                        const makeChanges = containerToCancelChanges.querySelector(".ChangeBtns")
+                        makeChanges.classList.add("hideMakeChanges")
+
+                    }
+                    cancelModifiedBtns.forEach(btn => {
+                        btn.addEventListener("click", cancelChanges)
+                    })
+
+                    const saveModifieds = document.querySelectorAll(".saveModified")
+                    saveModifieds.forEach(btn => {
+                        btn.addEventListener("click", saveChanges)
+                    })
+
+                    function saveChanges(e) {
+                        // get container housesing changes made 
+                        const changedContainer = e.target.parentElement.parentElement
+                        const modelToModify = changedContainer.getAttribute("data-edit")
+
+                        console.log(changedContainer)
+                        const modifyinputs = changedContainer.querySelectorAll('.modifyinput')
+                        const modifiedData = {}
+                        modifyinputs.forEach(input => {
+                            modifiedData[input.name] = input.value
+
+                        })
+
+                        submitChanges(modifiedData, modelToModify)
+                    }
+
+
+                    /**
+                     * @params {Object} data :-> An object representation of changes made 
+                     * @params {String} modelToModify :-> The collection name to be modified
+                    */
+                    async function submitChanges(data, modelToModify){
+                        console.log(data)
+                        console.log(modelToModify)
+                        const submitData = await fetch('./profile_page', {
+                            method : 'PUT',
+                            redirect: 'follow',
+                            headers : {
+                                'Content-Type' : 'application/json'
+                            },
+                            body : JSON.stringify({data, modelToModify})
+                        })
+                    }
+                    
+                    
                 </script>
             </header>
 
