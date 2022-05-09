@@ -88,7 +88,33 @@ async function signInUser(userForm){
     }
 }
 
+/**
+ * Modifies Intern in session.signedIn with updated req.body data
+ * @param {Object} req : -> The request object
+ */
+ async function updateInternData(req){
+    const internId = req.session.signedIn || req.cookies.signedIn
+    if(internId) {
+        const modelToModify = req.body.modelToModify
+        if(modelToModify === 'Intern'){
+            const InternDetails = await Intern.findOne({_id : internId})
+            modifiedData = req.body.data
+
+            for(let fieldName in modifiedData){
+                InternDetails[fieldName] = modifiedData[fieldName]
+            }
+            // console.log(InternDetails)
+            const saveChanges = await InternDetails.save()
+            console.log(saveChanges)
+        }
+        
+    }
+}
 
 
 
-module.exports  = { addInternData, signInUser, getSignedInData }
+
+module.exports  = { addInternData, 
+                    signInUser, 
+                    getSignedInData, 
+                    updateInternData }

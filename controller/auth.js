@@ -3,7 +3,11 @@ const express = require("express")
 const auth = express.Router()
 const {check, validationResult} = require('express-validator')
 
-const {addInternData, signInUser, getSignedInData} = require("../models/authModel")
+const {addInternData, 
+        signInUser, 
+        getSignedInData,
+        updateInternData} = require("../models/authModel")
+        
 const {validateSignUpDetails} = require('../validation')
 
 
@@ -98,10 +102,11 @@ auth.route('/profile_page')
     .post((req, res) => {
         return res.send("You are in the post method of the profile page")
     })
-    .put((req, res) => {
+    .put( async (req, res) => {
         console.log("Put request Made")
         console.log(req.body)
-        
+
+        const updateData = await updateInternData(req)
     })
 
 
